@@ -49,6 +49,7 @@
     const fontRange = document.getElementById('font-size-range'); // slider
     const fontPreviewEl = document.getElementById('font-preview');
     const fontPanelEl = document.getElementById('font-panel');
+    const fontLoadingEl = document.getElementById('font-loading');
     const colorSwatch = document.getElementById('color-swatch');
 
     // Ensure the canvas internal pixel size is full 4K regardless of CSS scaling
@@ -264,7 +265,7 @@
      */
     function currentFontFamily() {
         const opt = fontSelect.options[fontSelect.selectedIndex];
-        return opt ? opt.text : 'Roboto';
+        return opt ? opt.text : 'Arial';
     }
 
     // Pointer/interaction state and preview data
@@ -491,7 +492,54 @@
 
     // Update inline font preview and color swatch initially and on changes
     if (fontSelect) {
-        fontSelect.addEventListener('change', () => updateFontPreview());
+        // When the font changes, update the inline preview and show a
+        // loading spinner while the selected webfont downloads.
+        fontSelect.addEventListener('change', () => handleFontChange());
+    }
+
+    // Spinner helpers: show/hide the small loading indicator next to the font preview
+    function showFontLoading() {
+        if (!fontLoadingEl) return;
+        fontLoadingEl.classList.add('loading');
+        fontLoadingEl.setAttribute('aria-hidden', 'false');
+    }
+    function hideFontLoading() {
+        if (!fontLoadingEl) return;
+        fontLoadingEl.classList.remove('loading');
+        fontLoadingEl.setAttribute('aria-hidden', 'true');
+    }
+
+    // loadFontFor(family, timeout)
+    // Attempt to load the specified font family using the Font Loading API.
+    // Returns a promise that resolves when the font is ready or when the
+    // timeout elapses (to avoid hanging forever on slow networks).
+    function loadFontFor(family, timeout = 3000) {
+        if (!family) return Promise.resolve();
+        // If the Font Loading API is unavailable, resolve immediately.
+        if (!document.fonts || !document.fonts.load) return Promise.resolve();
+        // Use a reasonable size for the load() call — the size itself doesn't
+        // change which font face is loaded, but some browsers use it for matching.
+        const spec = `48px "${family.replace(/"/g, '')}"`;
+        try {
+            const loadPromise = document.fonts.load(spec);
+            const timeoutPromise = new Promise((res) => setTimeout(res, timeout));
+            return Promise.race([loadPromise, timeoutPromise]).then(() => { });
+        } catch (e) {
+            return Promise.resolve();
+        }
+    }
+
+    // Handle font change: update preview immediately, show spinner, and
+    // hide the spinner once the font has loaded (or after timeout).
+    function handleFontChange() {
+        updateFontPreview();
+        const family = currentFontFamily();
+        // Kick off spinner only if we have a spinner element
+        if (fontLoadingEl) showFontLoading();
+        loadFontFor(family, 3000).then(() => {
+            // Small delay to avoid flicker for very fast loads
+            setTimeout(hideFontLoading, 120);
+        });
     }
     if (colorSwatch && colorInput) {
         // Initialize swatch and update on color changes
@@ -538,6 +586,8 @@
     // Build UI and initialize previews
     populateFontPanel();
     updateFontPreview();
+    // Attempt to load the initially selected font and show spinner briefly
+    if (fontSelect) handleFontChange();
     // initialize canvas contrast based on the current color input
     if (colorInput && colorInput.value) updateCanvasContrast(colorInput.value);
 
@@ -589,12 +639,27 @@
     // a download via a temporary anchor element. Guarded in case the button is missing.
     if (downloadBtn) downloadBtn.addEventListener('click', () => {
         try {
+            // Create filename from current text input (sanitized). Falls back to 'igroovie'
+            function filenameFromText(s) {
+                if (!s) return 'igroovie';
+                let name = String(s).trim();
+                if (!name) return 'igroovie';
+                // Normalize and remove diacritics, replace spaces with dashes
+                name = name.normalize('NFKD').replace(/\p{Diacritic}/gu, '');
+                name = name.replace(/\s+/g, '-');
+                // Allow alphanumerics, dash and underscore only
+                name = name.replace(/[^A-Za-z0-9\-_]/g, '');
+                // Trim to reasonable length
+                if (name.length > 60) name = name.slice(0, 60);
+                return name || 'igroovie';
+            }
+            const baseName = (textInput && textInput.value) ? filenameFromText(textInput.value) : 'igroovie';
             canvas.toBlob((blob) => {
                 if (!blob) return;
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'igroovie-4k.png';
+                a.download = `${baseName}-4k.png`;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
