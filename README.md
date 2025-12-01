@@ -5,4 +5,4 @@ As you may know, iMovie doesn't have an option to overlay non-animated text. Thi
 
 This was mainly a test of AI code generation in VS Code. It's lame to use AI for these things, but this was my original idea. Gotta save time somehow.
 
-<a href="https://johnspahr.github.io/iGroovie/">Check it out</a>
+<a href="https://johnspahr.github.io/igroovie/">Check it out</a>
