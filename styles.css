@@ -1,0 +1,269 @@
+.font-loading {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-top-color: #4458be;
+  box-sizing: border-box;
+  display: none;
+}
+.font-loading.loading {
+  display: inline-block;
+  animation: spin 800ms linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.selection-outline {
+  pointer-events: none;
+}
+:root {
+  --gap: 12px;
+  --panel-width: 360px;
+}
+/*
+  styles.css — Styling for iGroovie
+  - Accent color: #4458be
+  - Layout: left controls panel, main canvas area
+  - Slider and button group styles are defined here
+*/
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, system-ui, Arial, sans-serif;
+  background: #111;
+  color: #eee;
+}
+.wrap {
+  display: flex;
+  gap: var(--gap);
+  height: 100%;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.controls {
+  width: var(--panel-width);
+  min-width: 260px;
+  background: #161616;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+}
+.controls h1 {
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+label {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+input[type='text'],
+select,
+input[type='number'],
+input[type='color'] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  background: #0f0f0f;
+  color: #fff;
+}
+.controls .small {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 0;
+  background: #4458be;
+  color: #fff;
+  cursor: pointer;
+}
+button.ghost {
+  background: #2a2a2a;
+}
+.canvas-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.canvas-container {
+  flex: 1;
+  background: #292f3d;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+}
+canvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.7);
+  background: #000;
+  border: 6px solid #2f2f2f;
+}
+.hint {
+  font-size: 12px;
+  color: #9aa;
+  text-align: center;
+}
+.footer-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls input,
+.controls select {
+  font-size: 14px;
+}
+
+.footer-controls .left-buttons,
+.footer-controls .right-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.left-buttons {
+  justify-content: flex-start;
+}
+.right-buttons {
+  justify-content: flex-end;
+}
+
+/* Font preview UI (small inline sample and floating panel) */
+.font-preview {
+  min-width: 36px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.font-panel {
+  position: absolute;
+  left: 24px;
+  top: 88px;
+  max-width: 320px;
+  max-height: 320px;
+  overflow: auto;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  border-radius: 8px;
+  z-index: 60;
+  display: none;
+}
+.font-panel .font-option {
+  padding: 8px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  background: transparent;
+}
+.font-panel .font-option:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+.font-option .name {
+  display: block;
+  font-size: 13px;
+  color: #ddd;
+}
+.font-option .sample {
+  font-size: 18px;
+  color: #fff;
+}
+
+/* Color swatch next to color input */
+#color-swatch {
+  box-sizing: border-box;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  height: 6px;
+  background: linear-gradient(90deg, #4458be, #6b8cff);
+  border-radius: 6px;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+input[type='range']:focus {
+  outline: none;
+}
+
+.controls button.ghost {
+  background: transparent;
+  color: #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.controls button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Footer 'More projects' link styling */
+.site-footer {
+  margin-top: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  color: #9aa;
+}
+.site-footer .more-projects {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+}
+.site-footer a#github-link {
+  color: #4458be;
+  text-decoration: none;
+  font-weight: 600;
+}
+.site-footer a#github-link:hover {
+  text-decoration: underline;
+}
+
+/* Fixed corner GitHub link */
+.canvas-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+.canvas-github {
+  display: inline-block;
+  color: #4458be;
+  background: rgba(68, 88, 190, 0.04);
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(68, 88, 190, 0.06);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+}
+.canvas-github:hover {
+  background: rgba(68, 88, 190, 0.08);
+}

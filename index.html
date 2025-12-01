@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--
+      index.html — iGroovie 4K Text Thrower
+      - This file contains the UI for placing text onto a 3840×2160 canvas
+      - Use the controls on the left to choose text, font, size, color, and alignment
+      - The generated PNG is full 4K and suitable for importing into iMovie as a still
+    -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="iGroovie — 4K Text Thrower. Create custom non-animated text for iMovie and other uses; place text onto a 4K canvas and export PNGs."
+    />
+    <!-- favicon/logo for browser tabs -->
+    <link rel="icon" type="image/png" href="logo.png" />
+    <!-- theme color to match accent -->
+    <meta name="theme-color" content="#4458be" />
+    <title>iGroovie — 4K Text Thrower</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Lora:wght@400;700&family=Oswald:wght@400;700&family=Poppins:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;700&family=Bebas+Neue&family=Pacifico&family=Lobster&family=Permanent+Marker&family=Indie+Flower&family=Fredoka+One&family=Gloria+Hallelujah&family=Amatic+SC&family=Shadows+Into+Light&family=Bangers&family=Chewy&family=Playball&family=Caveat&family=Raleway:wght@400;700&family=Nunito:wght@400;700&family=Quicksand:wght@400;700&family=Fira+Sans:wght@400;700&family=Anton&family=Comfortaa:wght@400;700&family=Inter&family=Noto+Sans&family=Ubuntu&family=Cabin&family=Kanit&family=Work+Sans&family=Rubik&family=DM+Sans&family=Space+Grotesk&family=Karla&family=Overpass&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <aside class="controls">
+        <h1>iGroovie — 4K Text Thrower</h1>
+        <div style="font-size: 12px; color: #9aa; margin-bottom: 8px">
+          Create custom non-animated text for iMovie (or export PNGs) — then
+          import into iMovie.
+        </div>
+        <div class="row">
+          <label for="text-input">Text</label>
+          <input
+            id="text-input"
+            type="text"
+            placeholder="Type text to throw"
+            value="Hello iGroovie"
+          />
+        </div>
+        <div class="row">
+          <button
+            id="centerText"
+            class="ghost"
+            title="Insert the current text centered on the canvas"
+          >
+            Insert Center Text
+          </button>
+        </div>
+        <div class="row">
+          <label for="font-select">Font</label>
+          <div style="display: flex; gap: 8px; align-items: center">
+            <select id="font-select">
+              <option>Roboto</option>
+              <option>Montserrat</option>
+              <option>Lora</option>
+              <option>Oswald</option>
+              <option>Poppins</option>
+              <option>Playfair Display</option>
+              <option>Merriweather</option>
+              <option>Open Sans</option>
+              <option>Bebas Neue</option>
+              <option>Pacifico</option>
+              <option>Lobster</option>
+              <option>Permanent Marker</option>
+              <option>Indie Flower</option>
+              <option>Fredoka One</option>
+              <option>Gloria Hallelujah</option>
+              <option>Amatic SC</option>
+              <option>Shadows Into Light</option>
+              <option>Bangers</option>
+              <option>Chewy</option>
+              <option>Playball</option>
+              <option>Caveat</option>
+              <option>Raleway</option>
+              <option>Nunito</option>
+              <option>Quicksand</option>
+              <option>Fira Sans</option>
+              <option>Anton</option>
+              <option>Comfortaa</option>
+              <option>Inter</option>
+              <option>Noto Sans</option>
+              <option>Ubuntu</option>
+              <option>Cabin</option>
+              <option>Kanit</option>
+              <option>Work Sans</option>
+              <option>Rubik</option>
+              <option>DM Sans</option>
+              <option>Space Grotesk</option>
+              <option>Karla</option>
+              <option>Overpass</option>
+              <option>Arial</option>
+              <option>Helvetica</option>
+              <option>Times New Roman</option>
+              <option>Georgia</option>
+              <option>Courier New</option>
+              <option>Verdana</option>
+              <option>Trebuchet MS</option>
+              <option>Impact</option>
+              <option>Comic Sans MS</option>
+              <option>Papyrus</option>
+              <option>Serif</option>
+              <option>Sans-serif</option>
+            </select>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <div
+                id="font-preview"
+                class="font-preview"
+                title="Click to open font list"
+              >
+                Aa
+              </div>
+              <div
+                id="font-loading"
+                class="font-loading"
+                aria-hidden="true"
+                title="Loading font"
+              ></div>
+            </div>
+          </div>
+          <!-- Floating font panel (populated by JS) -->
+          <div id="font-panel" class="font-panel" aria-hidden="true"></div>
+        </div>
+        <div class="row small">
+          <div style="flex: 1">
+            <label for="font-size-range">Font size (px)</label>
+            <div style="display: flex; gap: 8px; align-items: center">
+              <input
+                id="font-size-range"
+                type="range"
+                min="8"
+                max="800"
+                value="96"
+                style="flex: 1"
+              />
+              <input
+                id="font-size"
+                type="number"
+                min="8"
+                max="800"
+                value="96"
+                style="width: 84px"
+              />
+            </div>
+          </div>
+          <div style="width: 76px">
+            <label for="color">Color</label>
+            <div style="display: flex; align-items: center; gap: 8px">
+              <input id="color" type="color" value="#ffffff" />
+              <div
+                id="color-swatch"
+                style="
+                  width: 20px;
+                  height: 20px;
+                  border-radius: 4px;
+                  border: 1px solid rgba(255, 255, 255, 0.12);
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label for="align">Alignment</label>
+          <select id="align">
+            <option value="center">Center</option>
+            <option value="top-left">Top Left</option>
+            <option value="top-right">Top Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-right">Bottom Right</option>
+          </select>
+        </div>
+        <div class="row">
+          <label
+            ><input id="place-toggle" type="checkbox" checked /> Place on
+            click</label
+          >
+          <div class="hint">
+            Click the canvas to place text at that position.
+          </div>
+        </div>
+        <div class="row footer-controls">
+          <div class="left-buttons">
+            <button id="undo" class="ghost">Undo</button>
+            <button id="redo" class="ghost">Redo</button>
+          </div>
+          <div class="right-buttons">
+            <button id="clear">Clear</button>
+            <button id="download">Download PNG</button>
+          </div>
+        </div>
+        <div style="margin-top: 8px; font-size: 12px; color: #7a7a7a">
+          Canvas resolution: <strong>3840×2160 (4K)</strong>. The image you
+          download will be the full 4K PNG.
+        </div>
+      </aside>
+
+      <main class="canvas-wrap">
+        <div class="canvas-container">
+          <canvas
+            id="canvas"
+            width="3840"
+            height="2160"
+            aria-label="4K drawing canvas"
+          ></canvas>
+        </div>
+        <div class="hint">
+          Tip: adjust font and size, then click the canvas to "throw" text. Use
+          Download to save as PNG.
+        </div>
+        <div class="canvas-footer">
+          <a
+            id="canvas-github"
+            class="canvas-github"
+            href="https://github.com/johnspahr"
+            target="_blank"
+            rel="noopener noreferrer"
+            >More Projects</a
+          >
+        </div>
+      </main>
+    </div>
+
+    <script src="igroovie.js"></script>
+  </body>
+</html>
